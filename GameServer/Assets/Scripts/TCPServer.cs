@@ -14,7 +14,7 @@ public class TCPServer
         Socket.BeginAcceptTcpClient(OnClientConnected, null);
     }
 
-    public void CloseTCPSocket()
+    public void CloseSocket()
     {
         Socket.Stop();
         Socket = null;
@@ -32,8 +32,7 @@ public class TCPServer
                 if (Server.Clients[i].IsTCPSocketEmpty())
                 {
                     Server.Clients[i].ConnectTCPSocket(tempSocket);
-                    ServerSendPacket.SendWelcomePacket(Server.Clients[i].ConnectionID);
-                    // Test( Server.Clients[i].ConnectionID);
+                    ServerSendPacket.SendPlayerConnectedToServerData(Server.Clients[i].ConnectionID);
                     return;
                 }
             }
@@ -41,41 +40,6 @@ public class TCPServer
         catch (Exception e)
         {
             Debug.Log(e);
-            throw;
-        }
-    }
-}
-
-public class UDPServer
-{
-    public UdpClient Socket;
-
-    public void BeginReading(int port)
-    {
-        Socket = new UdpClient(port);
-        
-        Socket.BeginReceive(ReceiveCallback, null);
-    }
-
-    private void ReceiveCallback(IAsyncResult result)
-    {
-        try
-        {
-            IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);
-            byte[] data = Socket.EndReceive(result, ref endPoint);
-            Socket.BeginReceive(ReceiveCallback, null);
-
-            if (data.Length <= 4)
-            {
-                return;
-            }
-            
-            
-            
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e);;
             throw;
         }
     }

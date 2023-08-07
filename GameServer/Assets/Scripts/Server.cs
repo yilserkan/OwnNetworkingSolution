@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using UnityEngine;
 
 public class Server : MonoBehaviour
@@ -8,7 +11,8 @@ public class Server : MonoBehaviour
     [SerializeField] private NetworkConfig _networkConfig;
     
     public static Client[] Clients;
-    private TCPServer _tcpServer;
+    private static TCPServer _tcpServer;
+    private static UDPServer _udpServer;
 
     private void Start()
     {
@@ -17,12 +21,20 @@ public class Server : MonoBehaviour
 
         _tcpServer = new TCPServer();
         _tcpServer.StartTCPSocket(_networkConfig.Port);
+        
+        _udpServer = new UDPServer();
+        _udpServer.BeginReading(_networkConfig.Port, _networkConfig.IPAddress);
+                 
+        // byte[] sendBytes = Encoding.ASCII.GetBytes("Hello from Server");
+        //
+        // _udpServer.Socket.Send(sendBytes, sendBytes.Length);
         Debug.Log("Server started waiting for clients");
     }
 
     private void OnApplicationQuit()
     {
-        _tcpServer.CloseTCPSocket();
+        _tcpServer.CloseSocket();
+        _udpServer.CloseSocket();
         for (int i = 0; i < Clients.Length; i++)
         {
             if (Clients[i].IsTCPSocketEmpty()) { continue; }
@@ -40,5 +52,10 @@ public class Server : MonoBehaviour
         {
             Clients[i] = new Client(i);
         }
+    }
+
+    public static void SendUDPData(IPEndPoint endPoint, Packet packet)
+    {
+        _udpServer.SendData(endPoint, packet);
     }
 }

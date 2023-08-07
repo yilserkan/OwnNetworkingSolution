@@ -11,10 +11,16 @@ public class ClientSendPacket
     public static void SendWelcomePacket()
     {
         Packet packet = new Packet();
-        packet.Write((int)ClientPackets.WelcomeRespond);
+        packet.Write((int)ClientPackets.OnPlayerJoinedReceived);
         packet.Write("Test hello");
         packet.Write("Why");
 
         SendTCPPacket(packet);
+    }
+
+    public static void SendUDPPacket(Packet packet)
+    {
+        packet.WriteLength();
+        Client.Instance.Udp.Socket.BeginSend(packet.ToArray(), packet.Length(), null, null);
     }
 }

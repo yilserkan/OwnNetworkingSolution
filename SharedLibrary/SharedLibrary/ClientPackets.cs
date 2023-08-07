@@ -2,5 +2,6 @@ namespace SharedLibrary;
 
 public enum ClientPackets
 {
-    WelcomeRespond = 1
+    OnClientConnectedReceived = 1,
+    OnPlayerJoinedReceived
 }

@@ -5,13 +5,13 @@ public class Client
 {
     public int ConnectionID;
     public TCP Tcp;
-    // public UDP Udp;
+    public UDP Udp;
 
     public Client(int connectionID)
     {
         ConnectionID = connectionID;
         Tcp = new TCP(this);
-        // Udp = new UDP(this);
+        Udp = new UDP(this);
     }
     
     public bool IsTCPSocketEmpty()

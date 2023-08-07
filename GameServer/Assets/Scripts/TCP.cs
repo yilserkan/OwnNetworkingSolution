@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 
@@ -20,6 +21,8 @@ public class TCP
     public void Connect()
     {
         Debug.Log("Client connected with ip " + Socket.Client.RemoteEndPoint);
+        Debug.Log("Server Socket " + ((IPEndPoint)Socket.Client.LocalEndPoint).Port);
+        Debug.Log("Client Socket " + GetClientLocalPort());
         Socket.ReceiveBufferSize = BUFFER_SIZE;
         Socket.SendBufferSize = BUFFER_SIZE;
         _readBuffer = new byte[BUFFER_SIZE];
@@ -28,6 +31,7 @@ public class TCP
         Stream = Socket.GetStream();
 
         Stream.BeginRead(_readBuffer, 0, BUFFER_SIZE, ReceiveCallback, null);
+        
     }
     
     public void Disconnect()
@@ -105,27 +109,11 @@ public class TCP
     {
         Packet packet = new Packet(data);
         int identifier = packet.ReadInt();
-        PacketHandlers.Packets[identifier].Invoke(packet);
+        PacketHandlers.Packets[identifier].Invoke(_client.ConnectionID, packet);
+    }
+
+    private int GetClientLocalPort()
+    {
+        return ((IPEndPoint)Socket.Client.RemoteEndPoint).Port;
     }
 }
-
-// public class UDP
-// {
-//     private Client _client;
-//     public UdpClient Socket;
-//
-//     public UDP(Client client)
-//     {
-//         _client = client;
-//     }
-//     
-//     public void Connect()
-//     {
-//         Socket = new UdpClient();
-//         
-//         Socket.Connect(_client.);
-//         Socket.
-//     }
-//     
-//
-// }

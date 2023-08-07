@@ -2,5 +2,7 @@ namespace SharedLibrary;
 
 public enum ServerPackets
 {
-    Welcome = 1
+    OnClientConnectedToServer = 1,
+    OnPlayerJoined ,
+    OnTestUDPResponse
 }

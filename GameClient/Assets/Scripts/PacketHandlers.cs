@@ -10,18 +10,25 @@ public class PacketHandlers
     public static void InitializePacketHandlers()
     {
         Packets = new Dictionary<int, PacketHandler>();
-        Packets.Add((int)ServerPackets.Welcome, Packet_Welcome);
+        Packets.Add((int)ServerPackets.OnClientConnectedToServer, Packet_OnClientConnectedToServer);
+        Packets.Add((int)ServerPackets.OnPlayerJoined, Packet_OnPlayerJoined);
+        Packets.Add((int)ServerPackets.OnTestUDPResponse, Packet_TestUDPResponse);
     }
 
-    private static void Packet_Welcome(Packet packet)
+    private static void Packet_TestUDPResponse(Packet packet)
     {
-        string msg = packet.ReadString();
-        string msg2 = packet.ReadString();
-        int level = packet.ReadInt();
-        Debug.Log(msg);
-        Debug.Log(msg2);
-        Debug.Log(level);
-        ClientSendPacket.SendWelcomePacket();
+        Debug.Log("UDP response received");
+    }
+
+    private static void Packet_OnClientConnectedToServer(Packet packet)
+    {
+        var connectionId= packet.ReadInt();
+        Client.Instance.SetConnectionId(connectionId);
+    }
+
+    private static void Packet_OnPlayerJoined(Packet packet)
+    {
+        // packet
     }
     
 }

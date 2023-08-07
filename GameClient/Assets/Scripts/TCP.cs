@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 
@@ -48,6 +49,9 @@ public class TCP
             Stream = Socket.GetStream();
             Stream.BeginRead(_readBuffer, 0, BUFFER_SIZE, ReceiveCallback, null);
             Debug.Log("Connected to server");
+            Debug.Log("Server Socket " + ((IPEndPoint)Socket.Client.RemoteEndPoint).Port);
+            Debug.Log("Client Socket " + ((IPEndPoint)Socket.Client.LocalEndPoint).Port);
+            Client.Instance.ConnectUDPSocket(GetClientLocalPort());
         }
         catch (Exception e)
         {
@@ -129,17 +133,9 @@ public class TCP
         int identifier = packet.ReadInt();
         PacketHandlers.Packets[identifier].Invoke(packet);
     }
-}
-
-public class UDP
-{
-    public UdpClient Socket;
-
-    public void Connect(string ipAddress, int port)
+    
+    private int GetClientLocalPort()
     {
-        Socket = new UdpClient();
-        
-        Socket.Connect(ipAddress, port);
-        // Socket.
+        return ((IPEndPoint)Socket.Client.LocalEndPoint).Port;
     }
 }
