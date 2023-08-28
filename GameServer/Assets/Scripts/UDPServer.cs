@@ -25,7 +25,7 @@ public class UDPServer
             byte[] data = Socket.EndReceive(result, ref endPoint);
             
             Debug.Log("Receive Callback " + Encoding.ASCII.GetString(data));
-
+            
             Socket.BeginReceive(ReceiveCallback, null);
             
             if (data.Length < 4 )
@@ -34,13 +34,14 @@ public class UDPServer
             }
             
             Packet packet = new Packet(data);
-
+            
+            int packetLength =  packet.ReadInt();
             int connectionId = packet.ReadInt();
-
-            if (connectionId == 0)
-            {
-                return;
-            }
+            
+            // if (connectionId == 0)
+            // {
+            //     return;
+            // }
 
             if (Server.Clients[connectionId].Udp.Endpoint == null)
             {

@@ -23,7 +23,7 @@ public class ServerSendPacket
     public static void SendPlayerConnectedToServerData(int connectionId)
     {
         Packet packet = new Packet();
-        packet.Write((int)ServerPackets.OnPlayerJoined);
+        packet.Write((int)ServerPackets.OnClientConnectedToServer);
         packet.Write(connectionId);
         SendTCPPacket(connectionId, packet);
     }
